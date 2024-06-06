@@ -1,0 +1,38 @@
+{
+  "name": "complect",
+  "version": "1.0.0",
+  "description": "Compiler for Complect language",
+  "license": "GPL-3.0-only",
+  "main": "index.js",
+  "type": "module",
+  "author": {
+    "name": "Jarrod Connolly",
+    "email": "jarrod@nestedquotes.ca"
+  },
+  "bin": {
+    "complect": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "node --test --experimental-test-coverage",
+    "lint": "eslint"
+  },
+  "keywords": [
+    "compiler",
+    "stream",
+    "lexer",
+    "parser",
+    "ast"
+  ],
+  "devDependencies": {
+    "@eslint/js": "9.3.0",
+    "@types/node": "20.12.13",
+    "eslint": "9.3.0",
+    "globals": "15.3.0"
+  },
+  "dependencies": {
+    "@babel/generator": "7.24.6",
+    "@babel/parser": "7.24.6",
+    "@babel/traverse": "^7.24.7",
+    "@babel/types": "7.24.6"
+  }
+}

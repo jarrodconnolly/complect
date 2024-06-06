@@ -1,0 +1,41 @@
+identifier one
+whitespace 
+identifier two
+linefeed 
+identifier three
+linefeed 
+identifier four
+whitespace 
+identifier five
+whitespace 
+identifier six
+linefeed 
+identifier something
+linefeed 
+number 123
+whitespace 
+number 456
+linefeed 
+number 789
+linefeed 
+identifier x
+whitespace 
+operator =
+whitespace 
+number 42
+whitespace 
+operator +
+whitespace 
+number 45
+operator ;
+linefeed 
+number 4.5
+linefeed 
+number 25.123
+linefeed 
+identifier foo
+whitespace 
+operator =
+whitespace 
+string 'test'
+eof 

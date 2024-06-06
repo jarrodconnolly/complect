@@ -1,0 +1,31 @@
+make foo 'bar'
+print foo
+
+make a 37
+print a
+assign a 42
+print a
+a = a + 8
+print a
+
+make b 10
+make c 20
+make d 0
+d = b + c
+print d
+
+if d < 30
+  print 'less than 30'
+endif
+
+if d >= 30
+  print 'greater or equal to 30'
+endif
+
+d = d % 2
+
+make i 0
+as i <= 10
+  i = i + 1
+  print i
+repeat
