@@ -2,7 +2,6 @@
 
 ## Immediate (Next Up Changes)
 * Review how to use line/col info in TokenizerError & ASTError (available from preprocessing tokens)
-* Refactor _transform in babel-ast into smaller methods (#handleInitialState, #handleVariableDeclaration, etc.) for better readability
 * Improve variable names (e.g., #ifMode → #blockNestingLevel, #ifBlockStatements → #statementStacks)
 * Implement proper expression parser for assignments to handle simple values (e.g., support `f = 5` in addition to `f = i % 3`) - this may require changing the FSM to a more flexible parser
 
