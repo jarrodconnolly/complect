@@ -2,7 +2,7 @@
   "name": "complect",
   "version": "1.0.0",
   "description": "Compiler for Complect language",
-  "license": "GPL-3.0-only",
+  "license": "MIT",
   "main": "index.js",
   "type": "module",
   "author": {

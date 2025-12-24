@@ -78,6 +78,6 @@ repeat
 Complect is created by Jarrod Connolly.
 
 ## License
-GNU General Public License v3.0
+MIT License
 
-See [COPYING](COPYING) to see the full text.
+See [COPYING](COPYING) for the full license text.
