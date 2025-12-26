@@ -1,7 +1,7 @@
 make a 0
 make b 1
 make t 0
-make n 12
+make n 32
 as n > 0
   n = n - 1
   assign t a
