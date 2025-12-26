@@ -6,17 +6,63 @@
 */
 import { compile } from '../lib/compiler.js';
 import { pretty } from '../lib/util/pretty-hrtime.js';
+import { parseArgs } from 'node:util';
+import { createReadStream, createWriteStream } from 'node:fs';
 
 const args = process.argv.slice(2);
-let backend = 'babel';
+const parsedArgs = parseArgs({
+  options: {
+    help: {
+      type: 'boolean',
+      short: 'h',
+      default: false,
+    },
+    backend: {
+      type: 'string',
+      short: 'b',
+      default: 'babel',
+    },
+    file: {
+      type: 'string',
+      short: 'f',
+      default: '',
+    },
+    output: {
+      type: 'string',
+      short: 'o',
+      default: '',
+    }
+  },
+});
 
-if (args.length > 0 && args[0] === '--backend') {
-  backend = args[1];
-  // Remove the backend args
-  process.argv.splice(2, 2);
+if (parsedArgs.values.help) {
+  console.log(`Complect Compiler CLI
+
+Usage: complect [options]
+
+Options:
+  -h, --help          Show help information
+  -b, --backend      Specify the backend to use (default: babel)
+  -f, --file         Input source file (default: stdin)
+  -o, --output       Output file (default: stdout)
+`);
+  process.exit(0);
 }
 
-const inputStream = process.stdin;
+const backend = parsedArgs.values.backend;
+const file = parsedArgs.values.file;
+const output = parsedArgs.values.output;
+
+console.log(`Backend: ${backend}`);
+if (file) {
+  console.log(`Compiling: ${file}`);
+}
+if (output) {
+  console.log(`Output: ${output}`);
+}
+
+const inputStream = file ? createReadStream(file) : process.stdin;
+const outputStream = output ? createWriteStream(output) : process.stdout;
 
 const start = process.hrtime.bigint();
 compile(inputStream, backend)
@@ -25,12 +71,17 @@ compile(inputStream, backend)
     const totalTime = pretty(end - start);
     const message = `Total Time: ${totalTime} PreTokens: ${results.preprocessorTokenCount} Tokens: ${results.tokenCount} AST Nodes: ${results.astNodeCount} `;
     
+
     if (backend === 'llvm') {
-      console.log(`; ${message}`);
+      outputStream.write(`; ${message}\n\n`);
+      outputStream.write(results.code);
     } else {
-      console.log(`// ${message}`);
+      outputStream.write(`// ${message}\n\n`);
+      outputStream.write(results.code);
     }
-    console.log(`\n${results.code}`);
+
+    outputStream.end();
+
   })
   .catch((err) => {
     console.error(err);
