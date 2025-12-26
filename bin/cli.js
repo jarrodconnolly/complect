@@ -9,7 +9,6 @@ import { pretty } from '../lib/util/pretty-hrtime.js';
 import { parseArgs } from 'node:util';
 import { createReadStream, createWriteStream } from 'node:fs';
 
-const args = process.argv.slice(2);
 const parsedArgs = parseArgs({
   options: {
     help: {
