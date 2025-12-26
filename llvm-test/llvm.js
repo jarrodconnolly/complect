@@ -17,7 +17,8 @@ import llvm from 'llvm-bindings';
 function main() {
     const context = new llvm.LLVMContext();
     const module = new llvm.Module('demo', context);
-    module.setTargetTriple('x86_64-apple-macosx12.0.0');
+    //module.setTargetTriple('x86_64-apple-macosx12.0.0');
+    module.setTargetTriple('x86_64-pc-linux-gnu');
     const builder = new llvm.IRBuilder(context);
 
     const returnType = builder.getInt32Ty();
