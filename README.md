@@ -2,14 +2,14 @@
 
 <img src="https://i.imgur.com/NLVzU2tm.png" alt="Complect Logo"/>
 
-Complect is a toy compiler developed in Node.js. It operates as a stream-based compiler, processing code as a continuous stream of data. Currently, Complect functions primarily as a transpiler, converting Complect code into JavaScript using the Babel Abstract Syntax Tree (AST). Future enhancements include support for switchable AST backends, enabling compilation to WebAssembly (WASM), custom interpreters, and other targets.
+Complect is a toy compiler developed in Node.js. It operates as an async generator-based compiler, processing code incrementally with push-like data flow for efficiency and modularity. Currently, Complect functions primarily as a transpiler, converting Complect code into JavaScript using the Babel Abstract Syntax Tree (AST). Future enhancements include support for switchable AST backends, enabling compilation to WebAssembly (WASM), custom interpreters, and other targets.
 
 The initial implementation of this compiler was created to support a talk I presented at **OpenJS World 2022**. You can find the contents of this talk here. [Slides](https://static.sched.com/hosted_files/openjsworld2022/78/OpenJSW%20World%202022.pdf) [Video](https://youtu.be/aPHf_-N2yTU)
 
 ## Stages
-- Preprocessor: Transforms an input stream into a stream of preprocessing tokens.
-- Tokenizer: Converts the stream of preprocessing tokens into a stream of tokens.
-- Abstract Syntax Tree (AST): Generates an AST from the stream of tokens, currently utilizing Babel.
+- Preprocessor: Transforms an input stream into a sequence of preprocessing tokens yielded incrementally.
+- Tokenizer: Converts the sequence of preprocessing tokens into a sequence of tokens yielded incrementally.
+- Abstract Syntax Tree (AST): Generates an AST from the sequence of tokens, currently utilizing Babel.
 - Output: The Babel AST outputs code in JavaScript.
 
 ## Design
@@ -20,7 +20,7 @@ Complect utilizes a handcrafted parser and lexer to give developers fine-grained
 
 - Top-Down Parsing (LL(1)): Complect's choice of a top-down parser of the LL(1) type is not arbitrary. This parsing method, which proceeds from left to right and produces a leftmost derivation with a single token lookahead, is known for its efficiency and simplicity. The grammar of the Complect language has been meticulously designed to facilitate this type of parsing, ensuring that parsing decisions can be made with minimal lookahead.
 
-- Stream-Based Compilation: The compiler processes code as a data stream, enhancing efficiency and memory usage for large inputs. This design also allows easier insertion of future optimization layers, though synchronous data passing may be considered for simplicity in a toy compiler.
+- Async Generator-Based Compilation: The compiler processes code using async generators, yielding tokens and AST nodes incrementally for efficiency and modularity. This design supports asynchronous processing and easier debugging, with stages pushing data to the next via iteration (e.g., preprocessor yields tokens to tokenizer). While not a pure stream, it balances performance for large inputs with simplicity for a toy compiler.
 
 - Babel AST Integration: Complect currently generates an Abstract Syntax Tree (AST) using Babel, which outputs JavaScript code. This integration with Babel allows leveraging its robust ecosystem to further process and transform the generated JavaScript code.
 
@@ -28,7 +28,7 @@ Complect utilizes a handcrafted parser and lexer to give developers fine-grained
 
 ### Future
 - Support for switchable AST backends, including Binaryen for WebAssembly output and a custom AST for interpretation
-- Modular AST generation to enable pluggable backends for JavaScript, WebAssembly, or custom interpreters
+- Modular AST generation via an intermediate representation (IR) to enable pluggable backends for JavaScript, WebAssembly, or custom interpreters
 - Explore compiler optimization passes
 
 ## Usage

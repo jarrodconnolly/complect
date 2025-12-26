@@ -2,12 +2,10 @@
 
 ## Immediate (Next Up Changes)
 * Review how to use line/col info in TokenizerError & ASTError (available from preprocessing tokens)
-* Improve variable names (e.g., #ifMode → #blockNestingLevel, #ifBlockStatements → #statementStacks)
 * Implement proper expression parser for assignments to handle simple values (e.g., support `f = 5` in addition to `f = i % 3`) - this may require changing the FSM to a more flexible parser
 
 ## Short-term
 * Combine operators between preprocessor's isOperator() and tokenizer's operators.js for single source of truth and consistency
-* Review use of Streams vs. passing data between layers (consider if synchronous data passing is simpler for a toy compiler)
 
 ## Medium-term (Multiple AST/Backend Support)
 * Adapt architecture for pluggable AST/backends:
