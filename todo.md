@@ -6,7 +6,6 @@
 
 ## Short-term
 * Combine operators between preprocessor's isOperator() and tokenizer's operators.js for single source of truth and consistency
-* Review use of Streams vs. passing data between layers (consider if synchronous data passing is simpler for a toy compiler)
 
 ## Medium-term (Multiple AST/Backend Support)
 * Adapt architecture for pluggable AST/backends:
