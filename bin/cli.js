@@ -14,9 +14,9 @@ compile(inputStream)
   .then((results) => {
     const end = process.hrtime.bigint();
     const totalTime = pretty(end - start);
-    const message = `Total Time: ${totalTime} PreTokens: ${results.preprocessorTokenCount} Tokens: ${results.tokenCount}`;
+    const message = `Total Time: ${totalTime} PreTokens: ${results.preprocessorTokenCount} Tokens: ${results.tokenCount} AST Nodes: ${results.astNodeCount} `;
     console.log(`// ${message}`);
-    console.log(`\n${JSON.stringify(results.ir, null, 2)}`);
+    console.log(`\n${results.code}`);
   })
   .catch((err) => {
     console.error(err);
