@@ -7,10 +7,13 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: packages
+      run: add-apt-repository universe && apt-get update && apt-get install -y llvm-toolchain-14
+
     - name: Install Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '22'
+        node-version: '25'
 
     - name: Install dependencies
       run: npm ci
