@@ -1,7 +1,6 @@
 # Things To Do (Never things completed)
 
 ## Immediate (Next Up Changes)
-* **Functions (LLVM)**: Implement LLVM backend support for functions
 * **Language Grammar Enhancements**:
   - Add array support (declaration, indexing, operations)
   - Add file I/O operations (read/write files)
