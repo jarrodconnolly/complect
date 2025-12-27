@@ -3,10 +3,10 @@ make f 0
 make b 0
 make output ''
 
-as i <= 16
+as i <= 1024
+  assign output ''
   f = i % 3
   b = i % 5
-  assign output ''
   if f == 0
     output = output + 'Fizz'
   endif
