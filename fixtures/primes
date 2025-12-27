@@ -1,0 +1,25 @@
+func checkPrime n
+  make i 2
+  make result 1
+  if n < 2
+    result = 0
+  endif
+  as i * i <= n
+    if n % i == 0
+      result = 0
+    endif
+    i = i + 1
+  repeat
+  return result
+end
+
+make num 2
+make limit 1024
+make isPrime 0
+as num <= limit
+  call checkPrime num into isPrime
+  if isPrime == 1
+    print num
+  endif
+  num = num + 1
+repeat
