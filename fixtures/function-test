@@ -1,0 +1,15 @@
+func double n
+  make m n * 2
+  return m
+end
+
+func say word
+  print word
+end
+
+make x 5
+make result 0
+call double x result
+print result
+
+call say 'Hello, World!'

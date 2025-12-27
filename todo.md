@@ -1,8 +1,8 @@
-# Things To Do
+# Things To Do (Never things completed)
 
 ## Immediate (Next Up Changes)
+* **Functions (LLVM)**: Implement LLVM backend support for functions
 * **Language Grammar Enhancements**:
-  - **Functions** (highest priority): Implement function definitions and calls for code organization
   - Add array support (declaration, indexing, operations)
   - Add file I/O operations (read/write files)
   - Add break/continue statements for loop control
