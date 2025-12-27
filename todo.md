@@ -1,4 +1,4 @@
-# Things To Do (Never things completed)
+# Things To Do (Not Completed Things)
 
 ## Immediate (Next Up Changes)
 * **Language Grammar Enhancements**:
