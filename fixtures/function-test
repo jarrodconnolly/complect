@@ -1,0 +1,29 @@
+func double n
+  make m n * 2
+  return m
+end
+
+func say word
+  print word
+end
+
+func add a b
+  make sum a + b
+  return sum
+end
+
+make x 5
+make result 0
+call double x into result
+print result
+
+call say 'Hello, World!'
+
+make newWord 'Temporary string'
+call say newWord
+free newWord
+
+make total 0
+make a 10
+call add a 5 into total
+print total
