@@ -1,0 +1,23 @@
+func drawFrame frame
+  make angle 0
+  angle = frame % 360
+  make x 0
+  x = 400 + sin angle 100
+  make y 0
+  y = 300 + cos angle 100
+  sdlDrawLine 400 300 x y 255 0 0
+end
+
+sdlInit
+sdlWindow 800 600 "Bouncing Pixel Demo"
+sdlRenderer
+make frame 0
+as 1 == 1
+  sdlSetColor 0 0 0
+  sdlClear
+  call drawFrame frame
+  sdlPresent
+  sdlEvents
+  sdlDelay 16
+  frame = frame + 1
+repeat

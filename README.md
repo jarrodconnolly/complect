@@ -6,6 +6,12 @@ Complect is a toy compiler developed in Node.js. It operates as an async generat
 
 The initial implementation of this compiler was created to support a talk I presented at **OpenJS World 2022**. You can find the contents of this talk here. [Slides](https://static.sched.com/hosted_files/openjsworld2022/78/OpenJSW%20World%202022.pdf) [Video](https://youtu.be/aPHf_-N2yTU)
 
+## Demo
+
+Below is an example of the `fixtures/sdl-cube` demo application compiled with the LLVM backend, linked with sdl2. We have graphics.
+
+<img src="rotating.gif" alt="Rotating Cube Demo" height="300" />
+
 ## Stages
 - Preprocessor: Transforms an input stream into a sequence of preprocessing tokens yielded incrementally.
 - Tokenizer: Converts the sequence of preprocessing tokens into a sequence of tokens yielded incrementally.

@@ -1,0 +1,151 @@
+sdlInit
+sdlWindow 800 600 "Rotating Cube Demo"
+sdlRenderer
+
+func calcX x y z s c dist focal
+  make rx 0
+  rx = x * c - z * s
+  rx = rx / 1000
+
+  make rz 0
+  rz = x * s + z * c
+  rz = rz / 1000
+
+  make temp 0
+  temp = rz + dist
+
+  make sx 0
+  sx = 400 + rx * focal / temp
+
+  return sx
+
+end
+
+func calcY x y z s c dist focal
+  make ry 0
+  ry = y
+
+  make rz 0
+  rz = x * s + z * c
+  rz = rz / 1000
+
+  make temp 0
+  temp = rz + dist
+
+  make sy 0
+  sy = 300 + ry * focal / temp
+
+  return sy
+end
+
+func drawCube frame
+  make theta 0
+  theta = frame % 360
+
+  make focal 300
+  make dist 175
+
+  make s 0
+  s = sin theta 1000
+  make c 0
+  c = cos theta 1000
+
+  make x0 -50
+  make y0 -50
+  make z0 -50
+
+  make x1 50
+  make y1 -50
+  make z1 -50
+
+  make x2 50
+  make y2 50
+  make z2 -50
+
+  make x3 -50
+  make y3 50
+  make z3 -50
+
+  make x4 -50
+  make y4 -50
+  make z4 50
+
+  make x5 50
+  make y5 -50
+  make z5 50
+
+  make x6 50
+  make y6 50
+  make z6 50
+
+  make x7 -50
+  make y7 50
+  make z7 50
+
+  make sx0 0
+  call calcX x0 y0 z0 s c dist focal into sx0
+  make sy0 0
+  call calcY x0 y0 z0 s c dist focal into sy0
+
+  make sx1 0
+  call calcX x1 y1 z1 s c dist focal into sx1
+  make sy1 0
+  call calcY x1 y1 z1 s c dist focal into sy1
+
+  make sx2 0
+  call calcX x2 y2 z2 s c dist focal into sx2
+  make sy2 0
+  call calcY x2 y2 z2 s c dist focal into sy2
+
+  make sx3 0
+  call calcX x3 y3 z3 s c dist focal into sx3
+  make sy3 0
+  call calcY x3 y3 z3 s c dist focal into sy3
+
+  make sx4 0
+  call calcX x4 y4 z4 s c dist focal into sx4
+  make sy4 0
+  call calcY x4 y4 z4 s c dist focal into sy4
+
+  make sx5 0
+  call calcX x5 y5 z5 s c dist focal into sx5
+  make sy5 0
+  call calcY x5 y5 z5 s c dist focal into sy5
+
+  make sx6 0
+  call calcX x6 y6 z6 s c dist focal into sx6
+  make sy6 0
+  call calcY x6 y6 z6 s c dist focal into sy6
+
+  make sx7 0
+  call calcX x7 y7 z7 s c dist focal into sx7
+  make sy7 0
+  call calcY x7 y7 z7 s c dist focal into sy7
+
+  sdlSetColor 255 255 255
+  sdlDrawLine sx0 sy0 sx1 sy1
+  sdlDrawLine sx1 sy1 sx2 sy2
+  sdlDrawLine sx2 sy2 sx3 sy3
+  sdlDrawLine sx3 sy3 sx0 sy0
+
+  sdlDrawLine sx4 sy4 sx5 sy5
+  sdlDrawLine sx5 sy5 sx6 sy6
+  sdlDrawLine sx6 sy6 sx7 sy7
+  sdlDrawLine sx7 sy7 sx4 sy4
+
+  sdlDrawLine sx0 sy0 sx4 sy4
+  sdlDrawLine sx1 sy1 sx5 sy5
+  sdlDrawLine sx2 sy2 sx6 sy6
+  sdlDrawLine sx3 sy3 sx7 sy7
+end
+
+make frame 0
+as 1==1
+  sdlSetColor 0 0 0
+  sdlClear
+  call drawCube frame
+  sdlPresent
+  sdlEvents
+  sdlDelay 4
+  frame = frame + 1
+repeat
