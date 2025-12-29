@@ -14,6 +14,7 @@
   },
   "scripts": {
     "test": "node --test --experimental-test-coverage",
+    "generate-snapshots": "node --test --test-update-snapshots",
     "lint": "eslint"
   },
   "keywords": [
