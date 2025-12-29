@@ -1,0 +1,26 @@
+{
+  "name": "complect-language",
+  "displayName": "Complect Language Support",
+  "description": "Syntax highlighting for Complect programming language",
+  "version": "0.1.0",
+  "publisher": "complect",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [{
+      "id": "complect",
+      "aliases": ["Complect", "cplct"],
+      "extensions": [".cplct"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "complect",
+      "scopeName": "source.cplct",
+      "path": "./syntaxes/cplct.tmLanguage.json"
+    }]
+  }
+}

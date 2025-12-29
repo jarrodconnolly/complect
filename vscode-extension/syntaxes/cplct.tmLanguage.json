@@ -1,0 +1,114 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Complect",
+  "scopeName": "source.cplct",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#functions" },
+    { "include": "#if-statements" },
+    { "include": "#variables" },
+    { "include": "#operators" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.number-sign.cplct",
+          "match": "#.*$"
+        },
+        {
+          "name": "comment.line.double-slash.cplct",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.cplct",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.cplct",
+          "match": "\\b(make|assign|as|repeat|if|endif|func|end|return|call|into|print|free)\\b"
+        },
+        {
+          "name": "keyword.other.cplct",
+          "match": "\\b(sdlInit|sdlWindow|sdlRenderer|sdlSetColor|sdlClear|sdlPresent|sdlEvents|sdlDelay|sdlDrawLine|sin|cos)\\b"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.cplct",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.cplct",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.cplct",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            {
+              "name": "constant.character.escape.cplct",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.cplct",
+      "match": "\\b\\d+\\b"
+    },
+    "functions": {
+      "name": "meta.function.cplct",
+      "begin": "\\bfunc\\b\\s+([a-zA-Z_][a-zA-Z0-9_]*)",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.cplct" }
+      },
+      "end": "\\bend\\b",
+      "patterns": [
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#variables" }
+      ]
+    },
+    "if-statements": {
+      "name": "meta.if.cplct",
+      "begin": "\\bif\\b",
+      "end": "\\bendif\\b",
+      "patterns": [
+        { "include": "#keywords" },
+        { "include": "#strings" },
+        { "include": "#numbers" },
+        { "include": "#variables" },
+        { "include": "#operators" }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "name": "variable.name.cplct",
+          "match": "\\b[a-zA-Z_][a-zA-Z0-9_]*\\b"
+        }
+      ]
+    },
+    "operators": {
+      "name": "keyword.operator.cplct",
+      "match": "[+\\-*/%=<>!]+"
+    }
+  }
+}
