@@ -4,6 +4,8 @@
 
 Complect is a toy compiler developed in Node.js. It operates as an async generator-based compiler, processing code incrementally with push-like data flow for efficiency and modularity. Complect supports multiple backends: transpilation to JavaScript using Babel AST, and compilation to LLVM IR for native code generation. The pluggable backend architecture enables easy addition of WebAssembly, custom interpreters, and other targets.
 
+Recent additions include math functions (sin, cos), SDL graphics integration for 2D/3D rendering, and a rotating 3D cube demo showcasing perspective projection and real-time animation.
+
 The initial implementation of this compiler was created to support a talk I presented at **OpenJS World 2022**. You can find the contents of this talk here. [Slides](https://static.sched.com/hosted_files/openjsworld2022/78/OpenJSW%20World%202022.pdf) [Video](https://youtu.be/aPHf_-N2yTU)
 
 ## Demo
@@ -87,11 +89,72 @@ Linting is done using ESLint.
 `npm run lint`
 
 ## Language
-### Keywords and Usage
-Complect supports basic programming constructs including variables (`make`), assignments (`assign` for simple values, `=` for expressions), conditionals (`if`/`endif`), loops (`as`/`repeat`), and output (`print`). The language is evolving as the parser develops—expect changes.
+Complect is a simple, procedural programming language designed for educational and experimental purposes. It emphasizes clarity, modularity, and low-level control, with a focus on compiling to efficient native code via LLVM IR. The language supports integers, strings, arithmetic, comparisons, control flow, functions, and a growing standard library for math, graphics (via SDL), and utilities.
 
-#### Current Limitations
-Expressions are currently limited to binary operations; simple assignments (e.g., `f = 5`) are not yet supported and require `assign`. The grammar is designed for LL(1) parsing with minimal lookahead.
+Key features include:
+- **Variables and Expressions**: Dynamic typing with integer and string support. Expressions handle binary operations with operator precedence and unary minus.
+- **Control Flow**: Conditional statements (`if`/`endif`) and loops (`as`/`repeat`).
+- **Functions**: User-defined functions with parameters and return values.
+- **Standard Library**: Built-in functions for math (e.g., `sin`, `cos`), graphics (SDL commands), and I/O.
+- **Backends**: Full support for JavaScript (Babel) and LLVM IR generation.
+
+The language is evolving—new stdlib functions and features (e.g., arrays, file I/O) will be added incrementally, with this documentation updated accordingly.
+
+### Grammar
+Complect's grammar is designed for LL(1) parsing (top-down, left-to-right with single-token lookahead) to keep the parser simple and efficient. Programs consist of statements, which can include variable declarations, assignments, control structures, function calls, and stdlib commands. Expressions follow operator precedence rules.
+
+#### Keywords and Syntax
+Below is a reference for all supported keywords, their parameters, and usage. Parameters are positional unless noted.
+
+- **`make <identifier> <expression>`**: Declares and initializes a variable. E.g., `make x 5` creates `x` with value 5.
+- **`assign <identifier> <expression>`**: Assigns a value to a variable. E.g., `assign x 10`.
+- **`<identifier> = <expression>`**: Assigns the result of an expression to a variable. E.g., `x = y + 1`.
+- **`if <expression>` ... `endif`**: Conditional block. Executes if the expression is non-zero. E.g., `if x > 0 ... endif`.
+- **`as <expression>` ... `repeat`**: Loop (while-like). Repeats while the expression is true. E.g., `as i < 10 ... i = i + 1 repeat`.
+- **`print <expression>`**: Outputs the expression's value to stdout. E.g., `print "Hello"`.
+- **`free <identifier>`**: Deallocates a variable (for memory management in LLVM backend).
+- **`func <identifier> <parameters>` ... `end`**: Defines a function. Parameters are identifiers. E.g., `func add x y ... return result end`.
+- **`return <identifier>`**: Returns a value from a function. E.g., `return result`.
+- **`call <identifier> <arguments> [into <identifier>]`**: Calls a function. `into` assigns the return value. E.g., `call add 1 2 into sum`.
+- **`sin <angle> <scale>`**: Computes sine of angle (degrees) scaled by scale. Returns integer. E.g., `sin 90 1000` → 1000.
+- **`cos <angle> <scale>`**: Computes cosine of angle (degrees) scaled by scale. Returns integer. E.g., `cos 0 1000` → 1000.
+
+#### SDL Graphics Keywords (Standard Library)
+Complect integrates SDL2 for graphics and events. These are stdlib functions, not core keywords, but treated as such in parsing.
+
+- **`sdlInit`**: Initializes SDL. No parameters.
+- **`sdlWindow <width> <height> <title>`**: Creates a window. E.g., `sdlWindow 800 600 "Demo"`.
+- **`sdlRenderer`**: Creates a renderer for the window. No parameters.
+- **`sdlSetColor <r> <g> <b>`**: Sets drawing color (0-255). E.g., `sdlSetColor 255 0 0`.
+- **`sdlClear`**: Clears the screen with the current color.
+- **`sdlDrawLine <x1> <y1> <x2> <y2>`**: Draws a line between points.
+- **`sdlPresent`**: Updates the display with drawn content.
+- **`sdlDelay <ms>`**: Pauses execution for milliseconds.
+- **`sdlEvents`**: Polls and handles SDL events (e.g., window close).
+
+#### Expressions and Operator Precedence
+Expressions combine literals, variables, and operators. Precedence (highest to lowest):
+1. **Unary Minus**: `-<expression>` (e.g., `-x`).
+2. **Multiplicative**: `*`, `/`, `%` (left-associative).
+3. **Additive**: `+`, `-` (left-associative).
+4. **Comparisons**: `==`, `!=`, `<`, `>`, `<=`, `>=` (left-associative).
+
+Examples:
+- `x = a + b * c` → `x = a + (b * c)`
+- `y = -x / 2` → Unary minus applied first.
+- Literals: Integers (e.g., `42`), strings (e.g., `"hello"`).
+
+#### Program Structure
+- Programs are sequences of statements.
+- Functions can be defined anywhere and called after definition.
+- No global scope for variables (each function has its own scope).
+- Comments are not supported (keep code simple).
+
+#### Limitations and Notes
+- No arrays, objects, or advanced types yet.
+- Parentheses are not supported for expression grouping; expressions follow strict operator precedence.
+- Error messages include line/column info for debugging.
+- Grammar is extensible—new keywords/functions will be added here as the stdlib grows.
 
 ### FizzBuzz in Complect
 ```

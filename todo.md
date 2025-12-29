@@ -13,7 +13,7 @@
 * Improve error messages and debugging support
 
 ## Standard Library Functions
-* **Math Functions**: abs, sqrt, pow, sin, cos, tan, floor, ceil, round, min, max, random, randomInt
+* **Math Functions**: abs, sqrt, pow, tan, floor, ceil, round, min, max, random, randomInt
 * **String Functions**: length, substring, indexOf, replace, toUpper, toLower, trim, charAt
 * **Type Conversion**: int, float, string
 * **Utility Functions**: now, sleep, assert, typeOf
