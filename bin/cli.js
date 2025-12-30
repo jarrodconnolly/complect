@@ -1,13 +1,13 @@
 #!/usr/bin/env node
+import { createReadStream, createWriteStream } from 'node:fs';
+import { parseArgs } from 'node:util';
 /* Complect - Compiler for the Complect programming language
  *
  * Copyright © 2024 Jarrod Connolly
  * MIT License
-*/
+ */
 import { compile } from '../lib/compiler.js';
 import { pretty } from '../lib/util/pretty-hrtime.js';
-import { parseArgs } from 'node:util';
-import { createReadStream, createWriteStream } from 'node:fs';
 
 const parsedArgs = parseArgs({
   options: {
@@ -30,7 +30,7 @@ const parsedArgs = parseArgs({
       type: 'string',
       short: 'o',
       default: '',
-    }
+    },
   },
 });
 
@@ -69,7 +69,6 @@ compile(inputStream, backend)
     const end = process.hrtime.bigint();
     const totalTime = pretty(end - start);
     const message = `Total Time: ${totalTime} PreTokens: ${results.preprocessorTokenCount} Tokens: ${results.tokenCount} AST Nodes: ${results.astNodeCount} `;
-    
 
     if (backend === 'llvm') {
       outputStream.write(`; ${message}\n\n`);
@@ -80,7 +79,6 @@ compile(inputStream, backend)
     }
 
     outputStream.end();
-
   })
   .catch((err) => {
     console.error(err);
