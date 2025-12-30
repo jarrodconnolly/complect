@@ -1,0 +1,47 @@
+# Test file for Complect LSP features
+
+# Try typing Ctrl+Space to see completion suggestions
+# Keywords: make, assign, if, endif, as, repeat, func, return, call, end, print, free
+# Functions: sin, cos, sdlInit, sdlWindow, sdlDelay, etc.
+# Operators: +, -, *, /, =, ==, !=, <, <=, >, >=, %
+
+make x 42
+print "Hello World"
+
+make result 0
+
+if x == 42
+    print "x is 42"
+endif
+
+as x > 0
+    assign x x - 1
+    assign result result + 1
+repeat
+
+print result
+
+func add a b
+    return a + b
+end
+
+call add 5 3 sum
+print sum
+
+# Math functions
+make angle 0
+make scale 100
+make sine sin angle scale
+make cosine cos angle scale
+
+print sine
+print cosine
+
+# SDL graphics (if available)
+sdlInit
+sdlWindow 800 600 "Complect Demo"
+sdlRenderer
+sdlSetColor 255 255 255
+sdlClear
+sdlPresent
+endif
