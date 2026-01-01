@@ -4,7 +4,6 @@ const {
   ProposedFeatures,
   TextDocumentSyncKind,
   CompletionItemKind,
-  Hover,
   DiagnosticSeverity,
 } = require('vscode-languageserver/node');
 
@@ -63,12 +62,12 @@ connection.onInitialized(() => {
 });
 
 // The example settings
-const defaultSettings = { maxNumberOfProblems: 1000 };
+const _defaultSettings = { maxNumberOfProblems: 1000 };
 
 // Cache the settings of all open documents
 const documentSettings = new Map();
 
-connection.onDidChangeConfiguration((change) => {
+connection.onDidChangeConfiguration((_change) => {
   if (hasConfigurationCapability) {
     // Reset all cached document settings
     documentSettings.clear();

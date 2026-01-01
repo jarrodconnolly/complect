@@ -1,0 +1,12 @@
+sdlInit
+sdlWindow 320 240 "Test"
+sdlRenderer
+
+make frameBuffer[100]
+
+func testFunc buffer
+  print 42
+end
+
+call testFunc frameBuffer
+print 99

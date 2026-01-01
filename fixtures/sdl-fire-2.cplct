@@ -1,0 +1,140 @@
+# Classic 90s Demo-Scene Fire Effect
+# True Doom fire algorithm using pixel reading
+
+# Window dimensions (change these to adjust size)
+make width 320
+make height 480
+
+# Global random counter for more randomness
+make randCounter 0
+
+sdlInit
+sdlWindow width height "Fire Effect"
+sdlRenderer
+
+func drawFrame frame frameBuffer width height randCounter 
+  # True Doom fire algorithm implementation
+  make y 0
+  make x 0
+  make pixelIndex 0
+  make belowR 0
+  make belowG 0
+  make belowB 0
+  make randCool 0
+  
+  # Clear screen first
+  #sdlSetColor 0 0 0
+  #sdlClear
+  
+  # Draw heat source at bottom row (white pixels)
+  assign y height - 1
+  assign x 0
+  as x < width
+    assign pixelIndex 0
+    assign pixelIndex y * width
+    assign pixelIndex pixelIndex + x
+    assign pixelIndex pixelIndex * 3
+    make heat 255 - rnd randCounter 20  # Random heat variation (bright)
+    randCounter = randCounter + 1
+    frameBuffer[pixelIndex + 0] = heat
+    frameBuffer[pixelIndex + 1] = heat
+    frameBuffer[pixelIndex + 2] = heat
+    assign x x + 1
+  repeat
+  # Now propagate heat upward from bottom to top
+  # Process from top to bottom, reading from row below (not yet processed)
+  assign y 0
+  as y < height - 1  # up to second-to-last row
+    assign x 0
+    as x < width
+      # Generate random spread direction (0-3, like Doom)
+      make spreadRand rnd randCounter 4  # 0,1,2,3
+      randCounter = randCounter + 1
+      
+      # Choose source x position: x - spreadRand + 1 (Doom algorithm)
+      # This gives: x+1, x, x-1, x-2 (spread left and right)
+      make sourceX x - spreadRand + 1
+      
+      # Clamp to screen bounds
+      if sourceX < 0
+        assign sourceX 0
+      endif
+      if sourceX > width - 1
+        assign sourceX width - 1
+      endif
+      
+      # Read from (sourceX, y+1) - randomly left/center/right below
+      assign pixelIndex 0
+      assign pixelIndex y + 1
+      assign pixelIndex pixelIndex * width
+      assign pixelIndex pixelIndex + sourceX
+      assign pixelIndex pixelIndex * 3
+      assign belowR frameBuffer[pixelIndex + 0]
+      assign belowG frameBuffer[pixelIndex + 1]
+      assign belowB frameBuffer[pixelIndex + 2]
+
+      
+      # Random decay (0 or 1) plus base cooling
+      make decayRand rnd randCounter 2  # 0 or 1
+      randCounter = randCounter + 1
+      assign belowR belowR - decayRand - 2  # Base cooling of 2
+      assign belowG belowG - decayRand - 2
+      assign belowB belowB - decayRand - 2
+      
+      # Ensure not negative
+      if belowR < 0
+        assign belowR 0
+      endif
+      if belowG < 0
+        assign belowG 0
+      endif
+      if belowB < 0
+        assign belowB 0
+      endif
+      
+      # Write the cooled pixel to current position
+      assign pixelIndex 0
+      assign pixelIndex y * width
+      assign pixelIndex pixelIndex + x
+      assign pixelIndex pixelIndex * 3
+      frameBuffer[pixelIndex + 0] = belowR
+      frameBuffer[pixelIndex + 1] = belowG
+      frameBuffer[pixelIndex + 2] = belowB
+      assign x x + 1
+    repeat
+    assign y y + 1  # Move downward through rows
+  repeat
+
+  # flip buffer to screen
+  assign y 0
+  as y < height
+    assign x 0
+    as x < width
+      assign pixelIndex 0
+      assign pixelIndex y * width
+      assign pixelIndex pixelIndex + x
+      assign pixelIndex pixelIndex * 3
+      sdlPutPixel x y frameBuffer[pixelIndex + 0] frameBuffer[pixelIndex + 1] frameBuffer[pixelIndex + 2]
+      assign x x + 1
+    repeat
+    assign y y + 1
+  repeat
+
+end
+
+
+# Clear screen first
+sdlSetColor 0 0 0
+sdlClear
+
+make frameBuffer[width*height*3]
+
+make frame 0
+as 1==1
+  call drawFrame frame frameBuffer width height randCounter
+  sdlPresent
+  sdlEvents
+  #sdlDelay 4
+  frame = frame + 1
+  randCounter = randCounter + 1
+repeat
