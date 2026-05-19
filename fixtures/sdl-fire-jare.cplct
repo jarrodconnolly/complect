@@ -1,0 +1,366 @@
+# Classic 2D Fire Effect
+# Based on Javier "Jare" Arevalo's original 1993 ASM algorithm
+# Two-buffer approach: compute tempbuffer from backbuffer, scroll up 1px per frame
+
+# --- Configuration ---
+# Simulation runs at original 80x50 resolution; display window is 640x400 (8x scale)
+make width 80
+make height 50
+make bufSize 0
+bufSize = width * height
+
+# --- Frame buffers ---
+make backbuffer[bufSize]
+make tempbuffer[bufSize]
+
+# --- Initialize buffers to zero ---
+make i 0
+as i < bufSize
+  backbuffer[i] = 0
+  tempbuffer[i] = 0
+  i = i + 1
+repeat
+
+# --- Fire palette: index 0-255 maps to R,G,B ---
+# Simplified palette: ramps from black through red/orange to yellow to white
+make paletteR[256]
+make paletteG[256]
+make paletteB[256]
+
+# Jare 1993 original hand-rolled palette - VGA values (0-63) scaled to 0-255
+# Entries 0-5: black fading in with blue-green smoke tint
+# Entries 6-11: smoke-to-dark-red transition
+# Entries 12-63: red ramping through orange to yellow
+# Entries 64-255: pure white (hot core)
+make pi 0
+paletteR[0] = 0
+paletteG[0] = 0
+paletteB[0] = 0
+paletteR[1] = 0
+paletteG[1] = 4
+paletteB[1] = 4
+paletteR[2] = 0
+paletteG[2] = 16
+paletteB[2] = 20
+paletteR[3] = 0
+paletteG[3] = 28
+paletteB[3] = 36
+paletteR[4] = 0
+paletteG[4] = 32
+paletteB[4] = 44
+paletteR[5] = 0
+paletteG[5] = 36
+paletteB[5] = 48
+paletteR[6] = 60
+paletteG[6] = 24
+paletteB[6] = 32
+paletteR[7] = 101
+paletteG[7] = 16
+paletteB[7] = 16
+paletteR[8] = 133
+paletteG[8] = 12
+paletteB[8] = 12
+paletteR[9] = 161
+paletteG[9] = 8
+paletteB[9] = 8
+paletteR[10] = 194
+paletteG[10] = 8
+paletteB[10] = 8
+paletteR[11] = 222
+paletteG[11] = 4
+paletteB[11] = 4
+paletteR[12] = 255
+paletteG[12] = 0
+paletteB[12] = 0
+paletteR[13] = 255
+paletteG[13] = 0
+paletteB[13] = 0
+paletteR[14] = 255
+paletteG[14] = 12
+paletteB[14] = 0
+paletteR[15] = 255
+paletteG[15] = 28
+paletteB[15] = 0
+paletteR[16] = 255
+paletteG[16] = 40
+paletteB[16] = 0
+paletteR[17] = 255
+paletteG[17] = 52
+paletteB[17] = 0
+paletteR[18] = 255
+paletteG[18] = 64
+paletteB[18] = 0
+paletteR[19] = 255
+paletteG[19] = 80
+paletteB[19] = 0
+paletteR[20] = 255
+paletteG[20] = 93
+paletteB[20] = 0
+paletteR[21] = 255
+paletteG[21] = 105
+paletteB[21] = 0
+paletteR[22] = 255
+paletteG[22] = 117
+paletteB[22] = 0
+paletteR[23] = 255
+paletteG[23] = 133
+paletteB[23] = 0
+paletteR[24] = 255
+paletteG[24] = 145
+paletteB[24] = 0
+paletteR[25] = 255
+paletteG[25] = 157
+paletteB[25] = 0
+paletteR[26] = 255
+paletteG[26] = 157
+paletteB[26] = 0
+paletteR[27] = 255
+paletteG[27] = 161
+paletteB[27] = 0
+paletteR[28] = 255
+paletteG[28] = 161
+paletteB[28] = 0
+paletteR[29] = 255
+paletteG[29] = 165
+paletteB[29] = 0
+paletteR[30] = 255
+paletteG[30] = 169
+paletteB[30] = 0
+paletteR[31] = 255
+paletteG[31] = 169
+paletteB[31] = 0
+paletteR[32] = 255
+paletteG[32] = 174
+paletteB[32] = 0
+paletteR[33] = 255
+paletteG[33] = 178
+paletteB[33] = 0
+paletteR[34] = 255
+paletteG[34] = 178
+paletteB[34] = 0
+paletteR[35] = 255
+paletteG[35] = 182
+paletteB[35] = 0
+paletteR[36] = 255
+paletteG[36] = 182
+paletteB[36] = 0
+paletteR[37] = 255
+paletteG[37] = 186
+paletteB[37] = 0
+paletteR[38] = 255
+paletteG[38] = 190
+paletteB[38] = 0
+paletteR[39] = 255
+paletteG[39] = 190
+paletteB[39] = 0
+paletteR[40] = 255
+paletteG[40] = 194
+paletteB[40] = 0
+paletteR[41] = 255
+paletteG[41] = 198
+paletteB[41] = 0
+paletteR[42] = 255
+paletteG[42] = 198
+paletteB[42] = 0
+paletteR[43] = 255
+paletteG[43] = 202
+paletteB[43] = 0
+paletteR[44] = 255
+paletteG[44] = 206
+paletteB[44] = 0
+paletteR[45] = 255
+paletteG[45] = 206
+paletteB[45] = 0
+paletteR[46] = 255
+paletteG[46] = 210
+paletteB[46] = 0
+paletteR[47] = 255
+paletteG[47] = 214
+paletteB[47] = 0
+paletteR[48] = 255
+paletteG[48] = 214
+paletteB[48] = 0
+paletteR[49] = 255
+paletteG[49] = 218
+paletteB[49] = 0
+paletteR[50] = 255
+paletteG[50] = 222
+paletteB[50] = 0
+paletteR[51] = 255
+paletteG[51] = 222
+paletteB[51] = 0
+paletteR[52] = 255
+paletteG[52] = 226
+paletteB[52] = 0
+paletteR[53] = 255
+paletteG[53] = 230
+paletteB[53] = 0
+paletteR[54] = 255
+paletteG[54] = 230
+paletteB[54] = 0
+paletteR[55] = 255
+paletteG[55] = 234
+paletteB[55] = 0
+paletteR[56] = 255
+paletteG[56] = 234
+paletteB[56] = 0
+paletteR[57] = 255
+paletteG[57] = 238
+paletteB[57] = 0
+paletteR[58] = 255
+paletteG[58] = 242
+paletteB[58] = 0
+paletteR[59] = 255
+paletteG[59] = 242
+paletteB[59] = 0
+paletteR[60] = 255
+paletteG[60] = 246
+paletteB[60] = 0
+paletteR[61] = 255
+paletteG[61] = 250
+paletteB[61] = 0
+paletteR[62] = 255
+paletteG[62] = 250
+paletteB[62] = 0
+paletteR[63] = 255
+paletteG[63] = 255
+paletteB[63] = 0
+pi = 64
+as pi < 256
+  paletteR[pi] = 255
+  paletteG[pi] = 255
+  paletteB[pi] = 255
+  pi = pi + 1
+repeat
+
+# --- Initialization ---
+sdlInit
+sdlWindow 640 400 "Fire Effect"
+sdlRenderer
+
+# --- Main fire tick ---
+func fireTick frame backbuffer tempbuffer paletteR paletteG paletteB
+  make width 80
+  make height 50
+  make dispW 640
+  make dispH 400
+  make bufSize 4000
+  # Pre-declare all loop variables - alloca must not appear inside loops
+  make y 0
+  make x 0
+  make idx 0
+  make above 0
+  make below 0
+  make sum 0
+  make avg 0
+  make cool 0
+  make si 0
+  make heat 0
+  make ry 0
+  make rx 0
+  make simY 0
+  make x1 0
+  make x2 0
+  make cidx 0
+  make color 0
+  make r 0
+  make g 0
+  make b 0
+
+  # Step 1: 8-neighbor average from backbuffer into tempbuffer
+  # Original Jare 1993 algorithm: sum%4==0 (25% chance) applies cooling or wrap-around
+  # Upper rows: cool non-zero pixels by 1; bottom 4 rows: zero pixels wrap to 255 (heat source)
+  y = 1
+  as y < height - 1
+    x = 1
+    as x < width - 1
+      idx = y * width + x
+      above = idx - width
+      below = idx + width
+
+      sum = backbuffer[above - 1]
+      sum = sum + backbuffer[above]
+      sum = sum + backbuffer[above + 1]
+      sum = sum + backbuffer[idx - 1]
+      sum = sum + backbuffer[idx + 1]
+      sum = sum + backbuffer[below - 1]
+      sum = sum + backbuffer[below]
+      sum = sum + backbuffer[below + 1]
+      avg = sum / 8
+      cool = sum % 4
+      if cool == 0
+        if y <= height - 5
+          if avg > 0
+            avg = avg - 1
+          endif
+        endif
+        if y > height - 5
+          avg = avg + 255
+          avg = avg % 256
+        endif
+      endif
+
+      tempbuffer[idx] = avg
+      x = x + 1
+    repeat
+    y = y + 1
+  repeat
+
+  # Step 2: Scroll - copy tempbuffer[row+1] into backbuffer[row]
+  # backbuffer is set clean here before ash removal touches tempbuffer
+  si = width
+  as si < bufSize
+    backbuffer[si - width] = tempbuffer[si]
+    si = si + 1
+  repeat
+
+  # Step 3: Ash removal - cosmetic ember glow on tempbuffer only
+  # Runs after scroll so these values never feed back into averaging
+  # Values 0-14 in bottom 7 rows map to 22-value, matching original ASM/JS
+  y = height - 7
+  as y < height - 1
+    x = 0
+    as x < width
+      idx = y * width + x
+      heat = tempbuffer[idx]
+      if heat <= 14
+        avg = 22
+        heat = avg - heat
+        tempbuffer[idx] = heat
+      endif
+      x = x + 1
+    repeat
+    y = y + 1
+  repeat
+
+  # Step 4: Render tempbuffer scaled 8x to 640x400 display
+  # Each sim pixel is one 8-pixel-wide horizontal line; 32000 draw calls vs 256000 before
+  ry = 0
+  as ry < dispH
+    simY = ry / 8
+    rx = 0
+    as rx < width
+      cidx = simY * width + rx
+      color = tempbuffer[cidx]
+      r = paletteR[color]
+      g = paletteG[color]
+      b = paletteB[color]
+      sdlSetColor r g b
+      x1 = rx * 8
+      x2 = x1 + 7
+      sdlDrawLine x1 ry x2 ry
+      rx = rx + 1
+    repeat
+    ry = ry + 1
+  repeat
+end
+
+# --- Main loop ---
+make frame 0
+as 1 == 1
+  call fireTick frame backbuffer tempbuffer paletteR paletteG paletteB
+  sdlPresent
+  sdlDelay 16
+  sdlEvents
+  frame = frame + 1
+repeat
